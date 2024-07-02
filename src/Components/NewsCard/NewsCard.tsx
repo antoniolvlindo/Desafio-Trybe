@@ -12,9 +12,14 @@ const NewsCard: React.FC<NewsCardProps> = ({ title, intro, date, linkTo }) => {
     <div className="news-card">
       <h3>{title}</h3>
       <p>{intro}</p>
-      <p>{new Date(date).toLocaleDateString()}</p>
+      <div className="date-more">
+        <p>{new Date(date).toLocaleDateString()}</p>
+        <button onClick={() => window.open(linkTo, '_blank')}>Leia mais</button>
+      </div>
       <hr />
-      <button onClick={() => window.open(linkTo, '_blank')}>Leia mais</button>
+      <div>
+        <button>Like</button>
+      </div>
     </div>
   );
 };
