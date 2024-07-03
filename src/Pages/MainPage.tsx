@@ -4,23 +4,23 @@ import NewsCard from '../Components/NewsCard/NewsCard';
 import { fetchApi } from '../Utils/Api';
 
 interface News {
-  id: number;
+  id: string;
   titulo: string;
   introducao: string;
   data_publicacao: string;
   link: string;
+  imagens: string;
 }
 
 const MainPage: React.FC = () => {
   const [data, setData] = useState<News[]>([]);
-  const [error, setError] = useState<Error | null>(null);
+  const [, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const getData = async () => {
       try {
         const newsData = await fetchApi();
-        console.log('Dados da API:', newsData); // Log para depuração
-        setData(newsData);
+        setData(newsData.items);
       } catch (error) {
         setError(new Error("Ocorreu um erro ao buscar os dados"));
       }
@@ -29,24 +29,35 @@ const MainPage: React.FC = () => {
     getData();
   }, []);
 
-  if (error) {
-    return <div>Erro: {error.message}</div>;
-  }
+  const renderFeaturedNews = (news: News) => (
+    <div className="featured-news" key={news.id}>
+      <img src={JSON.parse(news.imagens).image_intro} alt={news.titulo} />
+      <h3>{news.titulo}</h3>
+      <p>{news.introducao}</p>
+      <p>{news.data_publicacao}</p>
+      <a href={news.link}>
+        <button>Leia a notícia aqui!</button>
+      </a>
+    </div>
+  );
 
   return (
     <main>
       <Header />
       <div className="news-container">
         {data.length > 0 ? (
-          data.map((news) => (
-            <NewsCard
-              key={news.id}
-              title={news.titulo}
-              intro={news.introducao}
-              date={news.data_publicacao}
-              linkTo={news.link}
-            />
-          ))
+          <>
+            {renderFeaturedNews(data[0])}
+            {data.slice(1).map((news) => (
+              <NewsCard
+                key={news.id}
+                title={news.titulo}
+                intro={news.introducao}
+                date={news.data_publicacao}
+                linkTo={news.link}
+              />
+            ))}
+          </>
         ) : (
           <div>Carregando...</div>
         )}
