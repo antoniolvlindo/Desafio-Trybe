@@ -29,17 +29,25 @@ const MainPage: React.FC = () => {
     getData();
   }, []);
 
-  const renderFeaturedNews = (news: News) => (
-    <div className="featured-news" key={news.id}>
-      <img src={JSON.parse(news.imagens).image_intro} alt={news.titulo} />
-      <h3>{news.titulo}</h3>
-      <p>{news.introducao}</p>
-      <p>{news.data_publicacao}</p>
-      <a href={news.link}>
-        <button>Leia a notícia aqui!</button>
-      </a>
-    </div>
-  );
+  const renderFeaturedNews = (news: News) => {
+    const imageData = JSON.parse(news.imagens);
+    const imageUrl = `https://servicodados.ibge.gov.br/${imageData.image_intro}`;
+
+    return (
+      <div className="featured-news" key={news.id}>
+        <img src={imageUrl} alt={news.titulo} />
+        <div className="featured-news-content">
+          <h3>Notícia mais recente</h3>
+          <h3>{news.titulo}</h3>
+          <p>{news.introducao}</p>
+          <p>{news.data_publicacao}</p>
+          <a href={news.link}>
+            <button>Leia a notícia aqui!</button>
+          </a>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <main>
